@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode
 
+import autonomousCommands
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
-@TeleOp(name = "BasicOpMode-xd", group = "Linear Opmode") //@Disabled
-class BasicOpMode_Linear : LinearOpMode() {
-    // Declare OpMode members.
+@Autonomous(name = "Autonomous-xd", group = "Autonomous")
+class BasicAutonomous_xd : LinearOpMode() {
     private val runtime = ElapsedTime()
     override fun runOpMode() {
         telemetry.addData("2Status", "Initialized")
@@ -27,26 +27,27 @@ class BasicOpMode_Linear : LinearOpMode() {
         rightRear.direction = DcMotorSimple.Direction.REVERSE
         leftFront.direction = DcMotorSimple.Direction.FORWARD
         rightFront.direction = DcMotorSimple.Direction.REVERSE
-        servo0.direction = Servo.Direction.REVERSE
-        servo1.direction = Servo.Direction.FORWARD
+        servo0.direction = Servo.Direction.FORWARD
+        servo1.direction = Servo.Direction.REVERSE
 
 
         waitForStart()
         runtime.reset()
 
         while (opModeIsActive()) {
-
             var leftRearPower: Double
             var rightRearPower: Double
             var leftFrontPower: Double
             var rightFrontPower: Double
 
-            val drive = -gamepad1.left_stick_y.toDouble() //-1.0
-            val strafe = gamepad1.left_stick_x.toDouble()
-            val rotate = gamepad1.right_stick_x.toDouble()
-//            val turn = gamepad1.right_stick_x.toDouble() //1
-//            leftPower = Range.clip(drive + turn, -1.0, 1.0) //-0
-//            rightPower = Range.clip(drive - turn, -1.0, 1.0)
+            var drive: Double = 0.0
+            var strafe: Double = 0.0
+            var rotate: Double = 0.0
+
+
+            //commands
+
+
             rightRearPower = Range.clip(drive + strafe - rotate, -1.0, 1.0)
             rightFrontPower = Range.clip(drive - strafe - rotate, -1.0, 1.0)
             leftRearPower = Range.clip(drive - strafe + rotate, -1.0, 1.0)
@@ -62,22 +63,6 @@ class BasicOpMode_Linear : LinearOpMode() {
             telemetry.addData("LeftRearPos: ", leftRear.currentPosition)
             telemetry.addData("RightRearPos: ", rightRear.currentPosition)
             telemetry.update()
-
-            //Servo
-            servo0.position -= gamepad1.right_stick_y.toDouble()/10 //to test
-            servo1.position -= gamepad1.right_stick_y.toDouble()/10
-//            val dpadUp = gamepad1.dpad_up
-//            val dpadDown = gamepad1.dpad_down
-//            if (dpadUp){
-//                servo0.position= servo0.position+0.1
-//                servo1.position= servo1.position+0.1
-//                sleep(30)
-//            }
-//            else if(dpadDown){
-//                servo0.position= servo0.position-0.1
-//                servo1.position= servo1.position-0.1
-//                sleep(30)
-//            }
         }
     }
 }
