@@ -13,7 +13,7 @@ class BasicOpMode_Linear : LinearOpMode() {
     // Declare OpMode members.
     private val runtime = ElapsedTime()
     override fun runOpMode() {
-        telemetry.addData("2Status", "Initialized")
+        telemetry.addData("Status", "Initialized")
         telemetry.update()
 
         val leftRear = hardwareMap.get(DcMotor::class.java, "rearleft")
@@ -44,9 +44,7 @@ class BasicOpMode_Linear : LinearOpMode() {
             val drive = -gamepad1.left_stick_y.toDouble() //-1.0
             val strafe = gamepad1.left_stick_x.toDouble()
             val rotate = gamepad1.right_stick_x.toDouble()
-//            val turn = gamepad1.right_stick_x.toDouble() //1
-//            leftPower = Range.clip(drive + turn, -1.0, 1.0) //-0
-//            rightPower = Range.clip(drive - turn, -1.0, 1.0)
+
             rightRearPower = Range.clip(drive + strafe - rotate, -1.0, 1.0)
             rightFrontPower = Range.clip(drive - strafe - rotate, -1.0, 1.0)
             leftRearPower = Range.clip(drive - strafe + rotate, -1.0, 1.0)
@@ -61,23 +59,28 @@ class BasicOpMode_Linear : LinearOpMode() {
             telemetry.addData("Status", "Run Time: $runtime")
             telemetry.addData("LeftRearPos: ", leftRear.currentPosition)
             telemetry.addData("RightRearPos: ", rightRear.currentPosition)
+            telemetry.addData("LeftFrontPos: ", leftFront.currentPosition)
+            telemetry.addData("RightFrontPos: ", rightFront.currentPosition)
+            telemetry.addData("servo0Pos: ", servo0.position)
+            telemetry.addData("servo1Pos: ", servo1.position)
             telemetry.update()
 
             //Servo
-            servo0.position -= gamepad1.right_stick_y.toDouble()/10 //to test
-            servo1.position -= gamepad1.right_stick_y.toDouble()/10
-//            val dpadUp = gamepad1.dpad_up
-//            val dpadDown = gamepad1.dpad_down
-//            if (dpadUp){
-//                servo0.position= servo0.position+0.1
-//                servo1.position= servo1.position+0.1
-//                sleep(30)
-//            }
-//            else if(dpadDown){
-//                servo0.position= servo0.position-0.1
-//                servo1.position= servo1.position-0.1
-//                sleep(30)
-//            }
+            servo0.position = servo0.position - Range.clip( gamepad1.right_stick_y.toDouble()/100, -0.1, 0.1) //to test
+            servo1.position = servo1.position - Range.clip(gamepad1.right_stick_y.toDouble()/100, -0.1, 0.1)
+
+            val dpadUp = gamepad1.dpad_up
+            val dpadDown = gamepad1.dpad_down
+            if (dpadUp){
+                servo0.position = servo0.position + 0.1
+                servo1.position = servo1.position + 0.1
+                sleep(30)
+            }
+            else if(dpadDown){
+                servo0.position = servo0.position - 0.1
+                servo1.position = servo1.position - 0.1
+                sleep(30)
+            }
         }
     }
 }
